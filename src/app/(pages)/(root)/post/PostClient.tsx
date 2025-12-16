@@ -63,7 +63,7 @@ export default function PostClient({
                                 </div>
                             </div>
                             <PostContent>
-                                <div className=" p-6  text-balance break-all" dangerouslySetInnerHTML={{__html: post!.content}}></div>
+                                <div className=" p-6   break-all" dangerouslySetInnerHTML={{__html: post!.content}}></div>
 
                             </PostContent>
 

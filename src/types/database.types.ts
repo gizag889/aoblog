@@ -41,28 +41,28 @@ export type Database = {
     Tables: {
       reactions: {
         Row: {
+          comment: string[] | null
           content_id: string
           created_at: string | null
           id: string
           reaction_type: Database["public"]["Enums"]["reaction_type"]
           user_token: string
-          comment: string | null
         }
         Insert: {
+          comment?: string[] | null
           content_id: string
           created_at?: string | null
           id?: string
           reaction_type: Database["public"]["Enums"]["reaction_type"]
           user_token: string
-          comment?: string | null
         }
         Update: {
+          comment?: string[] | null
           content_id?: string
           created_at?: string | null
           id?: string
           reaction_type?: Database["public"]["Enums"]["reaction_type"]
           user_token?: string
-          comment?: string | null
         }
         Relationships: []
       }

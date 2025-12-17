@@ -7,15 +7,16 @@ import PostContent from "../layouts/PostContent";
 
 interface ReactionMemoProps {
   contentId: string;
-  initialComment: string;
+  initialComment: string[];
 }
 
 const ReactionMemo = ({ contentId, initialComment }: ReactionMemoProps) => {
   const [isPending, startTransition] = useTransition();
-
+//updateReactionでサーバーアクションを呼び出す
   const [state, formAction] = useActionState(updateReaction, {
     reactionCount: 0,
-    hasReacted: !!initialComment,
+    //コメントがあるかどうか
+    hasReacted: !!initialComment.length,
     comment: initialComment,
   });
 
@@ -34,18 +35,7 @@ const ReactionMemo = ({ contentId, initialComment }: ReactionMemoProps) => {
     });
   };
 
-  let comments: string[] = [];
-  const rawComment = state.comment || initialComment;
-  try {
-    const parsed = JSON.parse(rawComment);
-    if (Array.isArray(parsed)) {
-       comments = parsed;
-    } else {
-       comments = rawComment ? [rawComment] : [];
-    }
-  } catch (e) {
-    comments = rawComment ? [rawComment] : [];
-  }
+  const comments: string[] = state.comment || initialComment || [];
 
   return (
     <div className="flex flex-col gap-4 w-full mt-6">

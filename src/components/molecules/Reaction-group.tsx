@@ -12,7 +12,7 @@ const REACTION_TYPES: Tables<"reactions">["reaction_type"][] = [
 type ReactionState = {
   reactionCount: number;
   hasReacted: boolean;
-  comment: string;
+  comment: string[];
 };
 
 const ReactionGroup = ({ contentId }: { contentId: string }) => {
@@ -26,11 +26,13 @@ const ReactionGroup = ({ contentId }: { contentId: string }) => {
     async ([, id]) => {
 
       const results = await Promise.all(
-
         REACTION_TYPES.map(async (type) => {
 
           const data = await fetchReactions(id, type);
 
+          // fetchReactions now returns comment as string[], so we cast/ensure compatibility
+          // Ideally fetchReactions return type should be inferred, but let's be safe.
+          // data has { reactionCount, hasReacted, comment: string[] }
           return { type, data };
 
         })
@@ -40,9 +42,7 @@ const ReactionGroup = ({ contentId }: { contentId: string }) => {
       const newStates: Record<string, ReactionState> = {};
 
       results.forEach(({ type, data }) => {
-
         newStates[type] = data;
-
       });
       //reactStatesを返す
       return newStates;
@@ -70,7 +70,7 @@ const ReactionGroup = ({ contentId }: { contentId: string }) => {
             <ReactionMemo
               key={reactionType}
               contentId={contentId}
-              initialComment={state.comment || ""}
+              initialComment={state.comment || []}
             />
           );
         }

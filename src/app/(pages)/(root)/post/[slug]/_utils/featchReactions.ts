@@ -3,7 +3,8 @@
 import { supabase } from "@/lib/supabaseClient";
 import { Tables } from "@/types/database.types";
 import { getUserToken } from "@/lib/userToken";
-import { GLOBAL_MEMO_CONTENT_ID } from "@/lib/constants";
+import { GLOBAL_MEMO_CONTENT_ID } from "@/constants/PostConst";
+// import { GLOBAL_MEMO_CONTENT_ID } from "@/lib/constants";
  
 const fetchReactions = async (
   contentId: string,
@@ -25,7 +26,7 @@ const fetchReactions = async (
     return {
       reactionCount: count || 0,
       hasReacted: false,
-      comment: "",
+      comment: [],
     };
   }
 
@@ -43,7 +44,7 @@ const fetchReactions = async (
     //リアクションをしたかどうか
     hasReacted: !!data,
     //コメントがあるか
-    comment: data?.comment || "",
+    comment: data?.comment || [],
   };
 };
  

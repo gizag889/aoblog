@@ -38,6 +38,7 @@ const ReactionMemo = ({ contentId, initialComment }: ReactionMemoProps) => {
   };
 
   const comments: string[] = state.comment || initialComment || [];
+  const isLimitReached = comments.length >= 5;
 
   return (
     <div className="flex flex-col gap-4 w-full mt-6">
@@ -51,14 +52,16 @@ const ReactionMemo = ({ contentId, initialComment }: ReactionMemoProps) => {
       <form ref={formRef} action={handleSubmit} className="flex flex-col gap-2 w-full">
         <textarea
             name="comment"
-            className="w-full p-2 border rounded-md text-sm min-h-[80px] bg-background text-foreground"
-            placeholder="コメントする..."
+            className="w-full p-2 border rounded-md text-sm min-h-[80px] bg-background text-foreground disabled:opacity-50"
+            placeholder={isLimitReached ? "コメントの上限(5件)に達しました" : "コメントする..."}
+            maxLength={50}
+            disabled={isLimitReached}
         />
         <div className="flex justify-end">
             <Button
               className="hover:bg-(--color-secondary-main)"
               type="submit"
-              disabled={isPending}
+              disabled={isPending || isLimitReached}
               size="lg"
               variant="outline"
               >

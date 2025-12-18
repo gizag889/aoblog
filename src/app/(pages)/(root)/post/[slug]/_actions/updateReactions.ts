@@ -44,6 +44,10 @@ export const updateReaction = async (
     const comments: string[] = currentData?.comment || [];
 
     if (reactiondata.comment) {
+      // コメントの上限は5件
+      if (comments.length >= 5) {
+        return prevState;
+      }
       comments.push(reactiondata.comment);
     }
 

@@ -10,10 +10,13 @@ const fetchReactions = async (
   contentId: string,
   reactionType: Tables<"reactions">["reaction_type"]
 ) => {
+  /* 
   let targetId = contentId;
   if (reactionType === "memo") {
     targetId = GLOBAL_MEMO_CONTENT_ID;
-  }
+  } 
+  */
+ const targetId = contentId;
 
   const { count } = await supabase
     .from("reactions")

@@ -30,7 +30,7 @@ export const updateReaction = async (
  
   // memoの場合は、コメントを更新または追加
   if (reactiondata.reactionType === "memo") {
-    const targetId = GLOBAL_MEMO_CONTENT_ID;
+    const targetId = reactiondata.contentId;
 
     // 既存のコメントを取得
     const { data: currentData } = await supabaseAdmin
@@ -41,7 +41,6 @@ export const updateReaction = async (
       .eq("reaction_type", "memo")
       .single();
 
-    // 既に配列として返ってくる
     const comments: string[] = currentData?.comment || [];
 
     if (reactiondata.comment) {
@@ -58,7 +57,8 @@ export const updateReaction = async (
           comment: comments,
           created_at: new Date().toISOString(),
         },
-        
+        //user_token, content_id, reaction_type の3つがすべて一致するレコードが既にあるかチェックします。
+        //これによって、「同じユーザーが、同じ記事に、同じリアクション（メモ）を何度も送った場合」 に、DBの行（レコード）を増やさず、1つの行の中にある comment 配列だけを更新し続けるという挙動を実現しています
         { onConflict: "user_token, content_id, reaction_type" }
       )
       .select()

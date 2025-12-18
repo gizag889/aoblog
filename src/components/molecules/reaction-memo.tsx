@@ -14,6 +14,7 @@ const ReactionMemo = ({ contentId, initialComment }: ReactionMemoProps) => {
   const [isPending, startTransition] = useTransition();
 //updateReactionでサーバーアクションを呼び出す
   const [state, formAction] = useActionState(updateReaction, {
+    //アクション時にprevStateとして渡す
     reactionCount: 0,
     //コメントがあるかどうか
     hasReacted: !!initialComment.length,
@@ -27,6 +28,7 @@ const ReactionMemo = ({ contentId, initialComment }: ReactionMemoProps) => {
     if (!comment.trim()) return; // Don't submit empty comments
     startTransition(() => {
       formAction({
+        // アクション時にReactionDataとして渡す
         contentId,
         reactionType: "memo",
         comment,
@@ -54,13 +56,13 @@ const ReactionMemo = ({ contentId, initialComment }: ReactionMemoProps) => {
         />
         <div className="flex justify-end">
             <Button
-            className="hover:bg-(--color-secondary-main)"
-            type="submit"
-            disabled={isPending}
-            size="lg"
-            variant="outline"
-            >
-            {isPending ? "保存中..." : "保存"}
+              className="hover:bg-(--color-secondary-main)"
+              type="submit"
+              disabled={isPending}
+              size="lg"
+              variant="outline"
+              >
+              {isPending ? "保存中..." : "保存"}
             </Button>
         </div>
       </form>

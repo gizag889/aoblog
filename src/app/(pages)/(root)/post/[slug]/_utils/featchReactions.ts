@@ -33,6 +33,23 @@ const fetchReactions = async (
     };
   }
 
+  if (reactionType === "memo") {
+    const { data: allReactions } = await supabase
+      .from("reactions")
+      .select("comment, user_token")
+      .eq("content_id", targetId)
+      .eq("reaction_type", "memo");
+
+    const allComments = allReactions?.flatMap((r) => r.comment || []) || [];
+    const hasReacted = allReactions?.some((r) => r.user_token === userToken) || false;
+
+    return {
+      reactionCount: count || 0,
+      hasReacted,
+      comment: allComments,
+    };
+  }
+
   const { data } = await supabase
     .from("reactions")
     .select()

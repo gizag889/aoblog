@@ -22,16 +22,11 @@ export const updateReaction = async (
   
   reactiondata: ReactionData
 ) => {
-  let userToken = await getUserToken();
- 
-  if (!userToken) {
-    userToken = await setUserToken();
-  }
- 
+  const fetchedToken = await getUserToken();
+  const userToken = fetchedToken || (await setUserToken());
   // memoの場合は、コメントを更新または追加
   if (reactiondata.reactionType === "memo") {
     const targetId = reactiondata.contentId;
-
     // 既存のコメントを取得
     const { data: currentData } = await supabaseAdmin
       .from("reactions")
@@ -44,13 +39,21 @@ export const updateReaction = async (
     const comments: string[] = currentData?.comment || [];
 
     if (reactiondata.comment) {
-      // コメントの上限は5件
-      if (comments.length >= 5) {
+      // 記事全体のコメント数をチェック
+      const { data: allMemos } = await supabaseAdmin
+        .from("reactions")
+        .select("comment")
+        .eq("content_id", targetId)
+        .eq("reaction_type", "memo");
+
+      const totalComments = allMemos?.flatMap((r) => r.comment || []).length || 0;
+
+      // コメントの上限は記事全体で5件
+      if (totalComments >= 5) {
         return prevState;
       }
       comments.push(reactiondata.comment);
     }
-
     const { data, error } = await supabaseAdmin
       .from("reactions")
       .upsert(
@@ -72,11 +75,19 @@ export const updateReaction = async (
       console.error(error);
       return prevState;
     }
+    // 更新後に全コメントを再取得して返す
+    const { data: allMemos } = await supabaseAdmin
+      .from("reactions")
+      .select("comment")
+      .eq("content_id", targetId)
+      .eq("reaction_type", "memo");
+
+    const allComments = allMemos?.flatMap((r) => r.comment || []) || [];
 
     return {
       reactionCount: prevState.reactionCount, 
       hasReacted: true,
-      comment: comments,
+      comment: allComments,
     };
   }
 

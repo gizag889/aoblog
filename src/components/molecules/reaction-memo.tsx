@@ -53,7 +53,7 @@ const ReactionMemo = ({ contentId, initialComment }: ReactionMemoProps) => {
         <textarea
             name="comment"
             className="w-full p-2 border rounded-md text-sm min-h-[80px] bg-background text-foreground disabled:opacity-50"
-            placeholder={isLimitReached ? "コメントの上限(5件)に達しました" : "コメントする..."}
+            placeholder={isLimitReached ? "この投稿へのコメントの上限(5件)に達しました" : "コメントする..."}
             maxLength={50}
             disabled={isLimitReached}
         />

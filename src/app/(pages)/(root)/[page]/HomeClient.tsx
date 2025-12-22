@@ -43,6 +43,7 @@ export default function HomeClient({
                         })}
                     </div>
                     <div>
+                        <a href="http://localhost:8000/portfolio/">ポートフォリオ</a>
                         <AboutBox></AboutBox>
                        <CategoryLinks categories={categories}></CategoryLinks>
                     </div>

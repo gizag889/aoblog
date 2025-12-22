@@ -12,6 +12,7 @@ const CommImage = ({ src, alt }: {
                 alt={alt}
                 fill
                 className=" rounded-t-lg"
+                unoptimized={src.startsWith('/wp-content')}
                  />
         </div>
     )

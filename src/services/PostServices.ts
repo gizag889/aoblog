@@ -97,7 +97,7 @@ class AppliesTypes {
                     modified: data.node.modified,
                     excerpt: data.node.excerpt,
                     featuredImage: {
-                        url: data.node.featuredImage.node.sourceUrl
+                        url: AppliesTypes._replaceUrl(data.node.featuredImage.node.sourceUrl)
                     },
                     category: {
                         slug: data.node.categories.edges[0].node.slug,
@@ -147,10 +147,10 @@ class AppliesTypes {
                 title: data.title,
                 slug: data.slug,
                 date: data.date,
-                content: data.content,
+                content: AppliesTypes._replaceUrl(data.content),
                 modified: data.modified,
                 featuredImage: {
-                    url: data.featuredImage.node.sourceUrl
+                    url: AppliesTypes._replaceUrl(data.featuredImage.node.sourceUrl)
                 },
                 category: {
                     slug: data.categories.edges[0].node.slug,
@@ -225,6 +225,13 @@ class AppliesTypes {
     }
    
 
+
+    private static _replaceUrl(content: string): string {
+        const wpUrl = process.env.NEXT_PUBLIC_WP_URL;
+        if (!wpUrl) return content;
+        const escapedUrl = wpUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        return content.replace(new RegExp(escapedUrl, 'g'), '');
+    }
 
 }
 

@@ -18,7 +18,7 @@ const nextConfig = {
       },
        {
         source: '/wp-content/uploads/:path*',
-      destination: 'https://wp521558.wpx.jp/wp-content/uploads/:path*',
+        destination: 'https://wp521558.wpx.jp/wp-content/uploads/:path*',
       }
     ]
   },

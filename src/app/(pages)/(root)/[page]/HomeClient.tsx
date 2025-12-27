@@ -1,4 +1,5 @@
 'use client'
+import Link from "next/link";
 import usePostListSwr from "@/hooks/swr/usePostListSwr";
 import PostListType from "@/types/PostListType";
 import CategoryType from "@/types/CategoryType";
@@ -43,7 +44,7 @@ export default function HomeClient({
                         })}
                     </div>
                     <div>
-                        <a href="http://localhost:8000/portfolio/">ポートフォリオ</a>
+                        <Link href="/portfolio">ポートフォリオ</Link>
                         <AboutBox></AboutBox>
                        <CategoryLinks categories={categories}></CategoryLinks>
                     </div>

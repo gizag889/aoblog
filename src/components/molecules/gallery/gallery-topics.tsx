@@ -1,5 +1,5 @@
-import { Button } from "@/components/atoms/button";
- 
+ import Button from "@/components/atoms/button";
+
 type GalleryTopicsProps = {
   selectedTopic: string;
   handleTopicClick: (topic: string) => void;

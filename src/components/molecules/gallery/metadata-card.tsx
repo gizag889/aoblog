@@ -1,5 +1,5 @@
 
-import { Button } from "@/components/atoms/button";
+import Button from "@/components/atoms/button";
 import { Star } from "lucide-react";
 import Link from "next/link";
 import { fetchRepoData } from "@/lib/utils/api";

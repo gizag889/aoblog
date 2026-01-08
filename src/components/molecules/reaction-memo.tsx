@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useTransition, useRef } from "react";
-import Button from "../atoms/button";
+import Button from "../atoms/Button";
 import { updateReaction } from "@/app/(pages)/(root)/post/[slug]/_actions/updateReactions";
 import PostContent from "../layouts/PostContent";
 

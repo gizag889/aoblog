@@ -1,6 +1,7 @@
 "use client";
  
-import Button from "../atoms/button";
+import Button from "../atoms/Button";
+
 import { Badge } from "../atoms/badge";
 import { Tables } from "@/types/database.types";
 import useReactionButtonLogic from "@/hooks/swr/useReactionButtonLogic";

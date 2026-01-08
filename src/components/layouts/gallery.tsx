@@ -1,7 +1,7 @@
 "use client";
  
 import { Badge } from "../atoms/badge";
-import Button from "../atoms/button";
+import Button from "../atoms/Button";
 import { Card, CardDescription, CardTitle } from "../molecules/gallery/card";
 import { MoveRight } from "lucide-react";
 import Image from "next/image";

@@ -10,6 +10,9 @@
 !.yarn/releases
 !.yarn/versions
 
+#constants
+/src/lib/_data/contents.ts
+
 # testing
 /coverage
 

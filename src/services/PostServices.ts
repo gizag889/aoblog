@@ -185,10 +185,12 @@ class AppliesTypes {
         featuredImage: {
           url: AppliesTypes._replaceUrl(data.featuredImage.node.sourceUrl),
         },
-        category: {
-          slug: data.categories.edges[0].node.slug,
-          name: data.categories.edges[0].node.name,
-        },
+        categories: data.categories.edges.map(
+          (edge: { node: { slug: string; name: string } }) => ({
+            slug: edge.node.slug,
+            name: edge.node.name,
+          })
+        ),
       };
       return post; // 配列ではなくPostTypeを返す
     } catch {

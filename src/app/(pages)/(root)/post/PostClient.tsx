@@ -53,12 +53,14 @@ export default function PostClient({
                                         <ModifiedText>{post?.modified}</ModifiedText>
                                         <DateText>{post!.date}</DateText>
                                     </div>
-                                    <div className="pt-2 flex align-center">
-                                        <Link href={`/category/${post!.category.slug}`}>
+                                    <div className="pt-2 flex align-center gap-2">
+                                        {post!.categories.map((category) => (
+                                            <Link key={category.slug} href={`/category/${category.slug}`}>
                                                 <div className="p-2 inline-block rounded-md border border-(--color-divider-main) bg-(--color-background-default)">
-                                                    {post!.category.name}
+                                                    {category.name}
                                                 </div>
-                                        </Link>
+                                            </Link>
+                                        ))}
                                     </div>
                                 </div>
                             </div>

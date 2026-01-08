@@ -55,7 +55,8 @@ const Gallery = (props: GalleryProps) => {
       {/* 最新リリースのみ大きいカードで表示 */}
       {latestProject && (
         <Link
-          href={`/${latestProject.owner}/${latestProject.slug}`}
+        
+          href={`portfolio/${latestProject.owner}/${latestProject.slug}`}
           className="contents"
         >
           <Card className="relative col-span-3 grid grid-cols-1 md:grid-cols-2 p-12 hover:border-emerald-600 transition border-2">
@@ -87,13 +88,13 @@ const Gallery = (props: GalleryProps) => {
               </div>
             </div>
             <div>
-              <Image
+              {/* <Image
                 src={latestProject.imageURL}
                 alt={latestProject.repoName}
                 className="rounded-lg mx-auto border"
                 width={500}
                 height={280}
-              />
+              /> */}
             </div>
           </Card>
         </Link>
@@ -104,7 +105,7 @@ const Gallery = (props: GalleryProps) => {
       {filteredProjects.map((project) => (
         <Link
           key={project.repoName}
-          href={`/${project.owner}/${project.slug}`}
+          href={`portfolio/${project.owner}/${project.slug}`}
           className="contents"
         >
           <Card
@@ -112,13 +113,13 @@ const Gallery = (props: GalleryProps) => {
             className="col-span-1 p-0! hover:border-emerald-600 transition border-2"
           >
             <div className="w-full h-52 object-cover">
-              <Image
+              {/* <Image
                 src={project.imageURL}
                 alt={project.repoName}
                 className="rounded-lg rounded-b-none max-h-full max-w-full object-fill"
                 width={364}
                 height={204}
-              />
+              /> */}
             </div>
             <div className="space-y-10 p-8">
               <CardTitle className="text-4xl">{project.repoName}</CardTitle>

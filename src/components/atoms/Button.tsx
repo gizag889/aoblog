@@ -40,6 +40,7 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  //アロー関数ではなく明示的に関数名を指定する
   function Button({ className, variant, size, asChild = false, ...props }, ref) {
     const Comp = asChild ? Slot : "button"
     return (

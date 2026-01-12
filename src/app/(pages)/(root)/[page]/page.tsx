@@ -11,8 +11,13 @@ export default async function HomeByPage({ params }: { params: Promise<{ page: s
       notFound()
   }
   
-  const [staticPostList, staticTotal]: [PostListType[], number] = await AppliesTypes.getList({ page: currentPage });
-  const allCategories = await AppliesTypes.getAllCategories();
+  const listResult = await AppliesTypes.getList({ page: currentPage });
+  if (listResult.type === 'failure') notFound();
+  
+  const [staticPostList, staticTotal]: [PostListType[], number] = listResult.data;
+
+  const categoriesResult = await AppliesTypes.getAllCategories();
+  const allCategories = categoriesResult.type === 'success' ? categoriesResult.data : [];
   
   console.log('Post list length:', staticPostList?.length); // デバッグ用
   console.log('Total:', staticTotal); // デバッグ用
@@ -27,7 +32,8 @@ export default async function HomeByPage({ params }: { params: Promise<{ page: s
 export const revalidate = 10
 
 export async function generateStaticParams() {
-    const list = await AppliesTypes.getAllPageList();
+    const listResult = await AppliesTypes.getAllPageList();
+    if (listResult.type === 'failure') return [];
     // Service returns [{ params: { page } }], transform to [{ page }]
-    return list.map((item) => ({ page: item.params.page }));
+    return listResult.data.map((item) => ({ page: item.params.page }));
 }

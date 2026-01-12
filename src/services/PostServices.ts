@@ -53,16 +53,18 @@ interface WpPage {
   };
 }
 
+import { Result, success, failure } from "@/types/Result";
+
 //postservice
 class AppliesTypes {
-  static async getPage(): Promise<PageType> {
+  static async getPage(): Promise<Result<PageType, Error>> {
     try {
       const res = await RepositoryFactory.page.getPage();
       const data = res.data.data.page;
-      return {
+      return success({
         title: data.title,
         content: data.content,
-      };
+      });
     } catch (error) {
       console.error("❌ getPage エラー発生:");
       console.error("エラー詳細:", error);
@@ -71,33 +73,43 @@ class AppliesTypes {
         error instanceof Error ? error.stack : "スタック情報なし"
       );
 
-      return { title: "", content: "" };
+      return failure(
+        error instanceof Error ? error : new Error("Unknown error")
+      );
     }
   }
 
-  static async getTotalCategory() {
-    // 2. 結果を格納する配列を初期化
-    const paths: { params: { param: string[] } }[] = [];
+  static async getTotalCategory(): Promise<
+    Result<{ params: { param: string[] } }[], Error>
+  > {
+    try {
+      // 2. 結果を格納する配列を初期化
+      const paths: { params: { param: string[] } }[] = [];
 
-    const res = await RepositoryFactory.post.getAllCategorySlugList();
+      const res = await RepositoryFactory.post.getAllCategorySlugList();
 
-    res.data.data.categories.edges.forEach((data: WpCategoryEdge) => {
-      const categorySlug = data.node.slug;
-      const total = data.node.posts?.pageInfo.offsetPagination.total ?? 0;
-      const pageList = AppliesTypes._makePageList(total);
+      res.data.data.categories.edges.forEach((data: WpCategoryEdge) => {
+        const categorySlug = data.node.slug;
+        const total = data.node.posts?.pageInfo.offsetPagination.total ?? 0;
+        const pageList = AppliesTypes._makePageList(total);
 
-      pageList.forEach((page: number) => {
-        // 2. 'getTotalCategory.push' を 'paths.push' に修正
-        paths.push({
-          params: {
-            param: ["category", categorySlug, "page", page.toString()],
-          },
+        pageList.forEach((page: number) => {
+          // 2. 'getTotalCategory.push' を 'paths.push' に修正
+          paths.push({
+            params: {
+              param: ["category", categorySlug, "page", page.toString()],
+            },
+          });
         });
       });
-    });
 
-    // 3. 結果の配列を return
-    return paths;
+      // 3. 結果の配列を return
+      return success(paths);
+    } catch (error) {
+      return failure(
+        error instanceof Error ? error : new Error("Unknown error")
+      );
+    }
   }
 
   private static _makePageList(total: number) {
@@ -111,7 +123,8 @@ class AppliesTypes {
   }: {
     categoryId?: number;
     page: number;
-  }): Promise<[PostListType[], number]> {
+    //「非同期通信を行い、完了後に『記事リスト』と『記事総数』のセットを返す」
+  }): Promise<Result<[PostListType[], number], Error>> {
     try {
       const offsetPagination = this._makeOffsetPaginationFromPage(page);
 
@@ -143,38 +156,50 @@ class AppliesTypes {
 
       const total = res.data.data.posts.pageInfo.offsetPagination.total;
 
-      return [postList, total];
+      return success([postList, total]);
     } catch (error) {
-      console.error("❌ getList エラー発生:");
-      console.error("エラー詳細:", error);
-      console.error(
-        "エラースタック:",
-        error instanceof Error ? error.stack : "スタック情報なし"
-      );
 
-      return [[], 0];
+
+      return failure(
+        error instanceof Error ? error : new Error("Unknown error")
+      );
     }
   }
 
   // すべてのカテゴリ（name/slug）を取得
-  static async getAllCategories(): Promise<{ slug: string; name: string }[]> {
+  static async getAllCategories(): Promise<
+    Result<{ slug: string; name: string }[], Error>
+  > {
     try {
       const res = await RepositoryFactory.post.getAllCategories();
-      return res.data.data.categories.edges.map((edge: WpCategoryEdge) => ({
-        slug: edge.node.slug,
-        name: edge.node.name ?? "",
-      }));
-    } catch {
-      return [];
+      return success(
+        res.data.data.categories.edges.map((edge: WpCategoryEdge) => ({
+          slug: edge.node.slug,
+          name: edge.node.name ?? "",
+        }))
+      );
+    } catch (error) {
+      return failure(
+        error instanceof Error ? error : new Error("Unknown error")
+      );
     }
   }
 
   // slugから記事単体を取得
-  static async getOne({ id }: { id: string }): Promise<PostType | null> {
+  static async getOne({
+    id,
+  }: {
+    id: string;
+  }): Promise<Result<PostType, Error>> {
     // エラーがあればnullを返す
     try {
       const res = await RepositoryFactory.post.getOne({ id }); // idを引数に取る
       const data = res.data.data.post;
+      // dataがnullの場合のハンドリングも必要だが、ここではRepositoryが投げるか構造が違うと仮定
+      if (!data) {
+        return failure(new Error("Post not found"));
+      }
+
       const post: PostType = {
         id: data.id,
         title: data.title,
@@ -192,60 +217,90 @@ class AppliesTypes {
           })
         ),
       };
-      return post; // 配列ではなくPostTypeを返す
-    } catch {
-      return null; // エラーがあればnullを返す
+      return success(post); // 配列ではなくPostTypeを返す
+    } catch (error) {
+      return failure(
+        error instanceof Error ? error : new Error("Unknown error")
+      );
     }
   }
 
   static async getAllSlugList(): Promise<
-    {
-      params: {
-        slug: string;
-      };
-    }[]
+    Result<
+      {
+        params: {
+          slug: string;
+        };
+      }[],
+      Error
+    >
   > {
     try {
       const res = await RepositoryFactory.post.getAllSlugList();
-      return res.data.data.posts.edges.map((data: WpPostEdge) => {
-        return { params: { slug: data.node.slug } };
-      });
-    } catch {
-      return [];
+      return success(
+        res.data.data.posts.edges.map((data: WpPostEdge) => {
+          return { params: { slug: data.node.slug } };
+        })
+      );
+    } catch (error) {
+      return failure(
+        error instanceof Error ? error : new Error("Unknown error")
+      );
     }
   }
 
   // 全カテゴリーのスラッグを取得（getAllSlugListに微妙にまとめにくので別メソッドを分ける）
   static async getAllCategorySlugList(): Promise<
-    {
-      params: {
-        slug: string;
-      };
-    }[]
+    Result<
+      {
+        params: {
+          slug: string;
+        };
+      }[],
+      Error
+    >
   > {
     try {
       const res = await RepositoryFactory.post.getAllCategorySlugList();
-      return res.data.data.categories.edges.map((data: WpCategoryEdge) => {
-        return { params: { slug: data.node.slug } };
-      });
-    } catch {
-      return [];
+      return success(
+        res.data.data.categories.edges.map((data: WpCategoryEdge) => {
+          return { params: { slug: data.node.slug } };
+        })
+      );
+    } catch (error) {
+      return failure(
+        error instanceof Error ? error : new Error("Unknown error")
+      );
     }
   }
 
   static async getAllPageList(): Promise<
-    {
-      params: {
-        page: string;
-      };
-    }[]
+    Result<
+      {
+        params: {
+          page: string;
+        };
+      }[],
+      Error
+    >
   > {
-    const total = await this.getTotal();
-    const pageTotal = Math.ceil(total / PostConst.sizePerPage);
-    const pageList = [...Array(pageTotal)].map((_, i) => i + 1);
-    return pageList.map((page: number) => {
-      return { params: { page: page.toString() } };
-    });
+    try {
+      const totalResult = await this.getTotal();
+      if (totalResult.type === "failure") return failure(totalResult.error);
+
+      const total = totalResult.data;
+      const pageTotal = Math.ceil(total / PostConst.sizePerPage);
+      const pageList = [...Array(pageTotal)].map((_, i) => i + 1);
+      return success(
+        pageList.map((page: number) => {
+          return { params: { page: page.toString() } };
+        })
+      );
+    } catch (error) {
+      return failure(
+        error instanceof Error ? error : new Error("Unknown error")
+      );
+    }
   }
 
   // スラッグからカテゴリーIDを取得する
@@ -253,14 +308,26 @@ class AppliesTypes {
     slug,
   }: {
     slug: string;
-  }): Promise<number> {
-    const res = await RepositoryFactory.post.getCategoryIdBySlug({ slug });
-    return res.data.data.category.categoryId;
+  }): Promise<Result<number, Error>> {
+    try {
+      const res = await RepositoryFactory.post.getCategoryIdBySlug({ slug });
+      return success(res.data.data.category.categoryId);
+    } catch (error) {
+      return failure(
+        error instanceof Error ? error : new Error("Unknown error")
+      );
+    }
   }
 
-  static async getTotal(): Promise<number> {
-    const res = await RepositoryFactory.post.getTotal();
-    return res.data.data.posts.pageInfo.offsetPagination.total;
+  static async getTotal(): Promise<Result<number, Error>> {
+    try {
+      const res = await RepositoryFactory.post.getTotal();
+      return success(res.data.data.posts.pageInfo.offsetPagination.total);
+    } catch (error) {
+      return failure(
+        error instanceof Error ? error : new Error("Unknown error")
+      );
+    }
   }
 
   private static _makeOffsetPaginationFromPage(

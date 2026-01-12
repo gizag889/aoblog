@@ -6,11 +6,18 @@ import { notFound } from "next/navigation";
 export default async function categoryPage({ params }: { params: Promise<{ slug: string}>}){
 
     const { slug } = await params;
-    const categoryId = await AppliesTypes.getCategoryIdBySlug({ slug });
-    if (!categoryId) {
+    const categoryResult = await AppliesTypes.getCategoryIdBySlug({ slug });
+    if (categoryResult.type === 'failure') {
         notFound();
     }
-    const [staticPost] = await AppliesTypes.getList({ categoryId, page: 1 });
+    const categoryId = categoryResult.data;
+
+    const listResult = await AppliesTypes.getList({ categoryId, page: 1 });
+    if (listResult.type === 'failure') {
+        notFound();
+    }
+    const [staticPost] = listResult.data;
+
     if (!staticPost || staticPost.length === 0) {
         notFound();
     }
@@ -23,7 +30,8 @@ export default async function categoryPage({ params }: { params: Promise<{ slug:
 export const revalidate = 10
 
     export async function generateStaticParams() {
-        const list = await AppliesTypes.getAllCategorySlugList();
+        const result = await AppliesTypes.getAllCategorySlugList();
+        if (result.type === 'failure') return [];
         // Service returns [{ params: { slug } }], transform to [{ slug }]
-        return list.map((item) => ({ slug: item.params.slug }));
+        return result.data.map((item) => ({ slug: item.params.slug }));
       }

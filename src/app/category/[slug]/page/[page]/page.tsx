@@ -6,13 +6,19 @@ import CategoryClient from "../../categoryClient";
 export default async function categoryPage({ params }: { params: Promise<{ slug: string, page: string}>}){
 
     const { slug, page: pageStr } = await params;
-    const categoryId = await AppliesTypes.getCategoryIdBySlug({ slug });
-    if (!categoryId) {
+    const categoryResult = await AppliesTypes.getCategoryIdBySlug({ slug });
+    if (categoryResult.type === 'failure') {
         notFound();
     }
-    
+    const categoryId = categoryResult.data
+
     const page = parseInt(pageStr);
-    const [staticPost] = await AppliesTypes.getList({ categoryId, page });
+    const listResult = await AppliesTypes.getList({ categoryId, page });
+    if (listResult.type === 'failure') {
+        notFound();
+    }
+    const [staticPost] = listResult.data;
+
     if (!staticPost || staticPost.length === 0) {
         notFound();
     }
@@ -24,7 +30,10 @@ export const revalidate = 10
 
 export async function generateStaticParams() {
     try {
-        const paths = await AppliesTypes.getTotalCategory();
+        const pathsResult = await AppliesTypes.getTotalCategory();
+        if (pathsResult.type === 'failure') return [];
+        const paths = pathsResult.data;
+
         // ページネーションも含めた全てのパスを生成（不正形は除外）
         const params = paths
             .map((path) => {

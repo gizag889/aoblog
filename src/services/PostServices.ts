@@ -6,6 +6,8 @@ import OffsetPaginationType from "@/types/OffsetPaginationType";
 import PageType from "@/types/PageType";
 
 import PostConst from "@/constants/PostConst";
+import { Result, success, failure } from "@/types/Result";
+import { processHtml } from "@/lib/html-processor";
 
 // WordPress API レスポンス型定義
 interface WpPostEdge {
@@ -45,15 +47,6 @@ interface WpCategoryEdge {
     };
   };
 }
-
-interface WpPage {
-  page: {
-    title: string;
-    content: string;
-  };
-}
-
-import { Result, success, failure } from "@/types/Result";
 
 //postservice
 class AppliesTypes {
@@ -158,8 +151,6 @@ class AppliesTypes {
 
       return success([postList, total]);
     } catch (error) {
-
-
       return failure(
         error instanceof Error ? error : new Error("Unknown error")
       );
@@ -205,7 +196,7 @@ class AppliesTypes {
         title: data.title,
         slug: data.slug,
         date: data.date,
-        content: AppliesTypes._replaceUrl(data.content),
+        content: await processHtml(AppliesTypes._replaceUrl(data.content)),
         modified: data.modified,
         featuredImage: {
           url: AppliesTypes._replaceUrl(data.featuredImage.node.sourceUrl),

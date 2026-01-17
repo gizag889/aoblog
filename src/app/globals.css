@@ -1,10 +1,24 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* アクティブな項目（スクロール現在地）の色を青に変更 */
+.toc-link.is-active-link {
+  color: #007bff !important; /* 文字色 */
+  font-weight: bold;         /* 必要に応じて太字に */
+}
+
+/* 任意：アクティブな項目の左側にバーを表示する場合 */
+/* .toc-list-item.is-active-li {
+  border-left: 2px solid #007bff;
+  padding-left: 8px;
+} */
+
+
 @custom-variant dark (&:is(.dark *));
 
 @theme {
   /* --font-family-body: 'Noto Sans JP', sans-serif; */
+
 
    /* ブレークポイントを CSS 変数で定義 */
    --breakpoint-xs: 0px;

@@ -3,7 +3,7 @@
 import usePostSwr from "@/hooks/swr/usePostSwr";
 import PostType from "@/types/PostType";
 
-import Layout from "@/components/layouts/Layout";
+import Layout from "@/app/(pages)/(root)/post/Layout"
 import PostContent from "@/components/layouts/PostContent";
 
 import Link from "next/link";
@@ -11,6 +11,7 @@ import DateText from "@/components/atoms/text/DateText";
 import ModifiedText from "@/components/atoms/text/ModifiedText";
 import PostNav from "@/components/molecules/PostNav";
 import ReactionGroup from "@/components/molecules/Reaction-group";
+
 
 import { useEffect } from "react";
 import hljs from "highlight.js";
@@ -28,6 +29,8 @@ export default function PostClient({
     useEffect(() => {
         hljs.highlightAll();
     }, [post?.content]);
+    
+
 
 
     return(
@@ -41,9 +44,12 @@ export default function PostClient({
                         alt="投稿のサムネイル"
                         />
             </div> */}
-            <div className=" pt-10 flex justify-center gap-15 w-full">
-                    <article className="w-full bg-(--color-primary-main) border border-[var(--color-divider-main)] rounded-lg shadow-[var(--shadow-lg)]">
+
+            <div className=" pt-10 flex  justify-center gap-15 w-full">
+
+                    <article className="post  w-full bg-(--color-primary-main) border border-[var(--color-divider-main)] rounded-lg shadow-[var(--shadow-lg)]">
                         <div >
+                            
                             <div className="p-4  rounded-md ">
                                 <div>
                                     <h1 className="text-4xl font-bold">{post!.title}</h1>
@@ -53,6 +59,7 @@ export default function PostClient({
                                         <ModifiedText>{post?.modified}</ModifiedText>
                                         <DateText>{post!.date}</DateText>
                                     </div>
+                                    {/* postは目次用のdiv */}
                                     <div className="pt-2 flex align-center gap-2">
                                         {post!.categories.map((category) => (
                                             <Link key={category.slug} href={`/category/${category.slug}`}>
@@ -71,6 +78,7 @@ export default function PostClient({
 
                         </div>
                     </article>
+
 
             </div>
             <ReactionGroup contentId={post!.slug}/>

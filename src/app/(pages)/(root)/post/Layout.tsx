@@ -1,6 +1,7 @@
-import Header from "../organisms/Header";
-import Footer from "../organisms/Footer";
+import Header from "@/components/organisms/Header";
+import Footer from "@/components/organisms/Footer";
 import { ReactNode } from "react";
+import Toc from "@/components/molecules/toc";
 
 const Layout = ({ children, hidePt = false }: {
     children: ReactNode
@@ -10,6 +11,7 @@ const Layout = ({ children, hidePt = false }: {
         <div> 
             <Header/>
                 <div className="flex justify-center">
+                    <Toc/>
                     <div className="order-1">{children}</div>
                 </div>
             <Footer />

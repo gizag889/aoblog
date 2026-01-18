@@ -1,6 +1,18 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* 例：WordPressのパレット色を定義 */
+.has-vivid-red-color {
+  color: #cf2e2e;
+}
+.has-vivid-cyan-blue-color {
+  color: #0693e3;
+
+}
+.has-luminous-vivid-orange-color{
+  color : #ff6900;
+}
+
 /* アクティブな項目（スクロール現在地）の色を青に変更 */
 .toc-link.is-active-link {
   color: #007bff !important; /* 文字色 */

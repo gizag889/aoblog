@@ -44,9 +44,16 @@ export default function HomeClient({
                         })}
                     </div>
                     <div>
-                        <Link href="/portfolio">ポートフォリオ</Link>
                         <AboutBox></AboutBox>
                        <CategoryLinks categories={categories}></CategoryLinks>
+                       <div className="pt-4">
+                        <Link href="/portfolio">
+                            <div className="p-2 inline-block rounded-md border border-(--color-divider-main) bg-(--color-background-default)">
+                                これまでつくったもの
+                            </div>
+                        </Link>
+                       </div>
+                       
                     </div>
                 </div>
                 <Pagination total={total} sizePerPage={PostConst.sizePerPage} currentPage={currentPage} path="" />

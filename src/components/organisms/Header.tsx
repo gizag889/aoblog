@@ -2,12 +2,10 @@ import Link from "next/link";
 import React from "react";
 
 
-const setNavLinks: Array<{ text: string, url: string}> = [
-    { text: "Web制作", url: "/web"},
-    { text: "読書記録", url: "/reading"},
-    { text: "Profile", url: "/profile"},
+// const setNavLinks: Array<{ text: string, url: string}> = [
+//     { text: "これまでつくったもの", url: "/portfolio"},
 
-];
+// ];
 
 const Header = () => {
     return (
@@ -15,7 +13,7 @@ const Header = () => {
             <header className="flex flex-col top-0 left-0 right-0 z-50  shadow-sm">
                 <div className="flex items-center px-4 min-h-[56px] sm:min-h-[74px] sm:px-6">
                     <div className="mx-auto w-full  sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-headerlg">
-                        <div className="flex justify-between items-center">
+                        <div className="flex justify-center">
                          
                                 <Link href="/" className="focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                                     <h1>
@@ -26,7 +24,7 @@ const Header = () => {
                            
                               
                           
-                                <nav>
+                                {/* <nav>
                                     
                                     <ul className=" inline-flex gap-4  list-none m-0 p-0 py-2 relative">
                                         { setNavLinks.map( (navLink) => (
@@ -36,7 +34,7 @@ const Header = () => {
 
                                         ))}
                                     </ul>
-                                </nav>
+                                </nav> */}
                                 
                          
                         </div>

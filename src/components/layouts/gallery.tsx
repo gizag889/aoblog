@@ -44,13 +44,12 @@ const Gallery = (props: GalleryProps) => {
  
   return (
     <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-8">
-      <div className="col-span-3 mx-auto">
-        {/* GalleryTopics コンポーネント */}
+      {/* <div className="col-span-3 mx-auto">
         <GalleryTopics
           selectedTopic={selectedTopic}
           handleTopicClick={handleTopicClick}
         />
-      </div>
+      </div> */}
  
       {/* 最新リリースのみ大きいカードで表示 */}
       {latestProject && (

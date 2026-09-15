@@ -24,6 +24,9 @@ export const metadata: Metadata = {
     template: `%s | ${siteMetadata.SITE_NAME}`,
   },
   description: siteMetadata.SITE_DESC,
+   verification: {
+    google: "cFEYuB4wyabaH14lOG0b9IbT3JE-VmYrWr_3cBYsNCQ",
+  },
   openGraph: {
     title: siteMetadata.SITE_NAME,
     description: siteMetadata.SITE_DESC,
